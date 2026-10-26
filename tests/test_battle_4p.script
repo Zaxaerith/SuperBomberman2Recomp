@@ -1,0 +1,40 @@
+# Super Bomberman 2 - 4-Player Multitap Verification
+wait 120
+press start 5
+wait 100
+press start 5
+wait 100
+press start 5
+wait 120
+# Title Screen reached
+press start 5
+wait 150
+# Mode Select reached, select BATTLE GAME
+press down 5
+wait 30
+press start 5
+# Match screen reached (Single Match)
+wait 120
+press start 5
+# Player Setup reached
+wait 120
+press start 5
+# Stage Select / Confirm
+wait 120
+press start 5
+# Confirm start
+wait 120
+press start 5
+# Now battle match loads
+wait 240
+dump 01_4p_arena_spawn
+# P1: Right + A, P2: Left + A
+# P3: Down + A, P4: Up + A (injected via before_run_frame)
+press right+a+p2:left+p2:a 30
+wait 10
+dump 02_4p_all_actions
+wait 30
+dump 03_4p_bombs_active
+wait 100
+dump 04_4p_explosions
+quit

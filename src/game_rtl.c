@@ -35,6 +35,17 @@
 #include "game_rtl.h"
 
 #include "beam_frame_driver.h"
+#include "common_rtl.h"
+
+static void GameInitialize(void)
+{
+    /* Super Multitap in console port 2 (Hudson HUD-101) -> seats 0-4.
+     * Seat 0 = P1 (console port 1).
+     * Seats 1-3 = P2, P3, P4 on Multitap.
+     * Seat 4 = unused 5th slot in 4-player Bomberman 2. */
+    RtlSetMultitap(1, 1);
+    RtlSetPadConnected(4, 0);
+}
 
 void GameRunOneFrame(void)
 {
@@ -53,11 +64,13 @@ void GameSessionReset(void)
      * been fine" is the usual desync culprit, because single-player never
      * re-enters the boot path twice in one process. */
     snes_beam_frame_driver_reset();
+    RtlSetMultitap(1, 1);
+    RtlSetPadConnected(4, 0);
 }
 
 const RtlGameInfo kGameInfo = {
     .title = "superbomberman2",
-    .initialize = NULL,
+    .initialize = &GameInitialize,
     .run_frame = &GameRunOneFrame,
     .draw_ppu_frame = &GameDrawPpuFrame,
     .save_name_prefix = "save",

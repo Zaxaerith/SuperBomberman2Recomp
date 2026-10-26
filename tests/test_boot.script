@@ -1,0 +1,6 @@
+# Boot test
+wait 60
+dump 01_boot_60
+wait 60
+dump 02_boot_120
+quit

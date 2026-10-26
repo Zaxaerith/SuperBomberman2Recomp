@@ -3,6 +3,9 @@ project(SuperBomberman2SNESRecomp C CXX)
 
 set(CMAKE_C_STANDARD 11)
 
+# Force SDL2 backend
+set(SNESRECOMP_SDL_BACKEND "SDL2" CACHE STRING "Desktop SDL backend (SDL3 or SDL2)" FORCE)
+
 # Release pin for lobby matching. Release builds stamp the VERSION file so two
 # peers can prove they are the same build; everything else stamps "dev".
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/VERSION" _GAME_VER_RAW)

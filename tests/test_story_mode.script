@@ -1,0 +1,30 @@
+# Advance to Stage 1-1 Gameplay and test movement + bomb + explosion
+wait 120
+press start 5
+wait 100
+press start 5
+wait 100
+press start 5
+wait 120
+# Title Screen reached
+press start 5
+wait 150
+# Mode Select reached, confirm NORMAL GAME
+press start 5
+# Wait for Stage 1-1 to fully load (frame ~1560)
+wait 960
+dump 01_stage1_spawn
+# Walk right
+press right 30
+wait 10
+dump 02_stage1_moved_right
+# Plant bomb
+press a 5
+wait 20
+dump 03_stage1_bomb_planted
+# Wait for bomb to detonate
+wait 140
+dump 04_stage1_bomb_exploding
+wait 40
+dump 05_stage1_post_explosion
+quit
