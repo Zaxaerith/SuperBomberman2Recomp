@@ -1,0 +1,26 @@
+# ROM identity for Super Bomberman 2 — the single source of truth.
+#
+# Read by three consumers, so a revision change is made once, here:
+#   - the build   (CMake generates snesrecomp_rom_identity.h from this file)
+#   - tools/regen.sh
+#   - .github/workflows/release.yml
+#
+# Format is `key = value`, one per line; `#` starts a comment. Values may be
+# quoted. Leaving a digest empty means the build cannot verify a ROM it is
+# handed — it will say so rather than accept it.
+
+display_name    = Super Bomberman 2
+rom_file        = Super Bomberman 2 (USA).sfc
+# Every digest of the bare image (copier header stripped), so the Retro
+# catalog can take a submission's identity from this file rather than ask
+# the submitter to hash the ROM again. The build verifies on crc32/sha256.
+expected_crc32  = 9c1f11e4
+expected_md5    = 0990cda295bd51587c6e3f173bdadba8
+expected_sha1   = 14e4d0b3d00fd04f996eea86daa485a35e501853
+expected_sha256 = 0a4b4a783a7faf6ada3e1326ecf85de77e8c2a171659b42a78a1fae43f806ca6
+rom_size        = 1048576
+mapping         = hirom
+region          = USA
+# What a mod package's [[target]] game_id must name to apply to this title
+# (snesrecomp/docs/MOD_PACKAGES.md). Stable across revisions on purpose.
+game_id         = superbomberman2-usa
