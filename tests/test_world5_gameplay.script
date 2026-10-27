@@ -1,0 +1,62 @@
+# Super Bomberman 2 - World 5 Gameplay (Password 6925)
+wait 120
+press start 5
+wait 100
+press start 5
+wait 100
+press start 5
+wait 150
+wait 140
+# Move down to PASSWORD
+press down 5
+wait 30
+press down 5
+wait 30
+press start 5
+wait 180
+# At password screen, enter 6925
+# Digit 1: 6 (down 4)
+press down 5
+wait 15
+press down 5
+wait 15
+press down 5
+wait 15
+press down 5
+wait 15
+press right 5
+wait 20
+# Digit 2: 9 (down 1)
+press down 5
+wait 15
+press right 5
+wait 20
+# Digit 3: 2 (up 2)
+press up 5
+wait 15
+press up 5
+wait 15
+press right 5
+wait 20
+# Digit 4: 5 (up 5)
+press up 5
+wait 15
+press up 5
+wait 15
+press up 5
+wait 15
+press up 5
+wait 15
+press up 5
+wait 15
+wait 30
+dump 01_pw5_entered
+press start 5
+wait 360
+dump 02_world5_banner
+wait 200
+dump 03_world5_map
+press right 30
+wait 30
+dump 04_world5_move
+quit

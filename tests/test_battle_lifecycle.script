@@ -1,0 +1,54 @@
+# Battle Mode Full Lifecycle Test: Elimination, Victory, Score Tally, Round 2
+wait 120
+press start 5
+wait 100
+press start 5
+wait 100
+press start 5
+wait 150
+wait 140
+# Title Screen: select BATTLE GAME
+press down 5
+wait 30
+press start 5
+wait 120
+# SINGLE MATCH
+press start 5
+wait 120
+# PLAYER SETUP
+press start 5
+wait 120
+# RULE SETUP
+press start 5
+wait 120
+# STAGE SELECT reached
+wait 100
+# Press 1: Lock Stage 1
+press start 5
+wait 60
+# Press 2: Launch Arena Match
+press start 5
+# Wait for arena loading and ready countdown (to frame ~1820)
+wait 490
+# P2 plants bomb (and SB2_BATTLE_ELIM triggers P3 & P4 bombs)
+press p2:a 5
+wait 20
+dump 01_bombs_planted
+# Wait for bombs to detonate (~frame 1980)
+wait 135
+dump 02_bombs_exploding
+# Players eliminated
+wait 40
+dump 03_players_eliminated
+# P1 victory celebration
+wait 120
+dump 04_p1_victory
+# Wait for SCOREBOARD screen to load (~frame 2450)
+wait 435
+dump 05_scoreboard_tally
+# Press START to advance to Round 2
+press start 5
+# Wait for Round 2 arena to load and start (~240 frames)
+wait 240
+dump 06_round2_arena_active
+quit

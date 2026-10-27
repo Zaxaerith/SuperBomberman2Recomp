@@ -1,0 +1,33 @@
+# Super Bomberman 2 - Death and Respawn Verification
+wait 120
+press start 5
+wait 100
+press start 5
+wait 100
+press start 5
+wait 120
+# Title Screen reached
+press start 5
+wait 150
+# Mode Select reached, confirm NORMAL GAME
+press start 5
+# Wait for Stage 1-1 to fully load (frame ~1560)
+wait 960
+dump 00_before_death
+# Plant bomb right under feet
+press a 5
+wait 20
+dump 01_bomb_at_feet
+# Wait for detonation hitting player
+wait 140
+dump 02_blast_hit_player
+wait 40
+dump 03_death_anim
+wait 120
+dump 04_respawn_sequence
+wait 120
+dump 05_respawn_ready
+press right 30
+wait 20
+dump 06_respawn_moved
+quit

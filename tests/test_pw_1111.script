@@ -1,0 +1,37 @@
+# Super Bomberman 2 - Password Entry
+wait 120
+press start 5
+wait 100
+press start 5
+wait 100
+press start 5
+wait 150
+wait 140
+# Move down to PASSWORD
+press down 5
+wait 30
+press down 5
+wait 30
+press start 5
+wait 180
+# At password screen
+press up 5
+wait 15
+press right 5
+wait 20
+press up 5
+wait 15
+press right 5
+wait 20
+press up 5
+wait 15
+press right 5
+wait 20
+press up 5
+wait 15
+wait 30
+dump 01_pw_entered
+press start 5
+wait 300
+dump 02_world_loaded
+quit

@@ -1,0 +1,64 @@
+# Super Bomberman 2 - World 2 Gameplay
+wait 120
+press start 5
+wait 100
+press start 5
+wait 100
+press start 5
+wait 150
+wait 140
+# Move down to PASSWORD
+press down 5
+wait 30
+press down 5
+wait 30
+press start 5
+wait 180
+# At password screen, enter 5462
+press up 5
+wait 15
+press up 5
+wait 15
+press up 5
+wait 15
+press up 5
+wait 15
+press up 5
+wait 15
+press right 5
+wait 20
+press up 5
+wait 15
+press up 5
+wait 15
+press up 5
+wait 15
+press up 5
+wait 15
+press right 5
+wait 20
+press down 5
+wait 15
+press down 5
+wait 15
+press down 5
+wait 15
+press down 5
+wait 15
+press right 5
+wait 20
+press up 5
+wait 15
+press up 5
+wait 15
+wait 30
+dump 01_pw_entered
+press start 5
+wait 360
+dump 02_world2_banner
+wait 180
+dump 03_world2_map
+press right 30
+wait 30
+dump 04_world2_move
+quit

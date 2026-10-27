@@ -26,11 +26,11 @@
 ## 三、初代 BombermanRecomp 与反汇编研究经验
 
 1. **HiROM 空间布局与代码/数据分离**：
-   - 初代 SB1（LoROM 512 KiB）与二代 SB2（HiROM 1 MiB）存在架构差异。二代向量入口 `$00:FA00` 引导后迅速跳入 Bank `$C0..$C3`，不能直接套用初代的 Bank 00 局部偏移。
+   - 初代 SB1（512 KiB HiROM）与二代 SB2（1 MiB HiROM）虽然均为 HiROM 映射，但容量规模与 Bank 布局存在显著差异。二代向量入口 `$00:FA00` 引导后迅速跳入 Bank `$C0..$C3`，不能直接套用初代的 Bank 00 局部偏移。
    - 静态分析需以二代原生只读数据表与代码段边界为准，不能硬搬初代的 3,304 个符号表。
 2. **现代调度驱动对自定义 GDI 宿主的替代**：
    - 初代 `BombermanRecomp` 使用早期旧版 SNESRecomp 与自定义 Win32/GDI 宿主，并依赖 `interp_bridge_run_interrupt` 注入中断和 `Sleep(1)` 帧节奏补偿。
-   - 本项目全面采用现代 SNESRecomp 框架的 `snes_beam_frame_driver_run_frame()`（Beam-Aligned Driver），通过 PPU 扫描线光束时钟严格锁相同步，天然保证 NMI/IRQ、HDMA 渐变与 59.94 Hz NTSC 原始帧节奏。
+   - 本项目全面采用现代 SNESRecomp 框架的 `snes_beam_frame_driver_run_frame()`（Beam-Aligned Driver），通过 PPU 扫描线光束时钟严格锁相同步，天然保证 NMI/IRQ、HDMA 渐变与约 60.0988 Hz SNES NTSC 原始场频节奏。
 3. **Multitap 端口协议标准**：
    - 依据 `docs/MULTITAP.md` 与 Hudson HUD-101 规格，Super Bomberman 2 采用 Console Port 2 外接 Multitap 方案：
      - Port 1: Seat 0（Player 1 直连）。

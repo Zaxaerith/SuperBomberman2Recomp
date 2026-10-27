@@ -60,6 +60,20 @@ static void SuperBomberman2_BeforeRunFrame(void)
             RtlSetPadState(3, 0);
         }
     }
+
+    const char *battle_elim = getenv("SB2_BATTLE_ELIM");
+    if (battle_elim) {
+        /* Inject P3 and P4 bomb placement at frames 1820-1825 */
+        if (s_frame >= 1820 && s_frame <= 1825) {
+            /* P3 (Seat 2): A (0x0100) */
+            RtlSetPadState(2, 0x0100);
+            /* P4 (Seat 3): A (0x0100) */
+            RtlSetPadState(3, 0x0100);
+        } else if (s_frame > 1825 && s_frame <= 1840) {
+            RtlSetPadState(2, 0);
+            RtlSetPadState(3, 0);
+        }
+    }
 }
 
 static const SnesDesktopHostGame kGameHost = {
