@@ -4,7 +4,7 @@ $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path "$PSScriptRoot\..").Path
 $zipPath = Join-Path $projectRoot "dist\SuperBomberman2Recomp-windows-x64-v0.1.0-preview-rc1.zip"
 $realRom = Join-Path $projectRoot "Super Bomberman 2 (USA).sfc"
-$testBase = "C:\MYAPPLY\SB2RCValidation"
+$testBase = Join-Path $env:TEMP "SB2RCValidation"
 
 if (-not (Test-Path $zipPath)) { throw "RC1 ZIP not found at $zipPath" }
 if (-not (Test-Path $realRom)) { throw "ROM not found at $realRom" }

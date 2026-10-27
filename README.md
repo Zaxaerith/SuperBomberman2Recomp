@@ -23,7 +23,7 @@ A native Windows x64 recompilation of **Super Bomberman 2** (USA), built on [SNE
 
 ## ROM Identity
 
-The recompilation requires the original, unaltered North American release of Super Bomberman 2:
+The recompilation requires the original, unaltered North American retail release of Super Bomberman 2:
 
 | Property | Value |
 |---|---|
@@ -41,6 +41,22 @@ The recompilation requires the original, unaltered North American release of Sup
 
 ---
 
+## Running on Windows x64
+
+### Launching the Game
+- **GUI Launcher Mode**: Launch `SuperBomberman2SNESRecomp.exe` directly. The launcher displays a ROM file selector with real-time SHA-256 verification.
+- **Cached ROM Launch**: Once a valid ROM is selected, its path is recorded in `rom.cfg`. Enabling **"Skip launcher on boot"** (`SkipLauncher = 1` in `config.ini`) boots directly into gameplay.
+- **Command-Line Direct Boot**:
+  ```powershell
+  .\SuperBomberman2SNESRecomp.exe "path\to\Super Bomberman 2 (USA).sfc"
+  ```
+- **Force Launcher Override**: Pass `--launcher` to open the settings window even if `SkipLauncher = 1` is configured:
+  ```powershell
+  .\SuperBomberman2SNESRecomp.exe --launcher
+  ```
+
+---
+
 ## 4-Player Multitap Configuration
 
 Super Bomberman 2 natively supports up to 4 simultaneous players via the SNES Multitap connected to **Controller Port 2**:
@@ -51,7 +67,7 @@ Super Bomberman 2 natively supports up to 4 simultaneous players via the SNES Mu
 | **Seat 1** | **Player 2 (Black Bomberman)** | Gamepad 2 / Keyboard | Gamepad (or secondary keyboard keys) |
 | **Seat 2** | **Player 3 (Red Bomberman)** | Gamepad 3 / Keyboard | Gamepad (or keypad controls) |
 | **Seat 3** | **Player 4 (Blue Bomberman)** | Gamepad 4 / Keyboard | Gamepad (or alternate keys) |
-| **Seat 4** | *Disconnected* | None | Reserved for future expansion |
+| **Seat 4** | *Disconnected* | None | Reserved for hardware compatibility |
 
 Each player slot is independently configured in `config.ini` (`SourceP1`..`SourceP4`) and `keybinds.ini`. The GUI launcher allows assigning different controllers or keyboards to each seat without input crosstalk.
 
@@ -110,10 +126,17 @@ The original cartridge uses a 4-character password system rather than battery-ba
 - Ninja build system
 - Python 3.10 or newer
 
+### Framework Pin Baseline
+
+- **snesrecomp**: `82b4acbf909095184cee32a20cf6f78557598234`
+- **recomp-ui**: `eaf99cacd861707ca84726fe8a416785b2b0daf2`
+
 ### Build Instructions
 
 ```powershell
 # 1. Clone repository and initialize submodules
+git clone https://github.com/Zaxaerith/SuperBomberman2Recomp.git
+cd SuperBomberman2Recomp
 git submodule update --init --recursive
 
 # 2. Place your valid Super Bomberman 2 (USA).sfc in the project root
@@ -135,4 +158,15 @@ The resulting executable will be located at `build/SuperBomberman2SNESRecomp.exe
 ## Known Limitations & Verification Status
 
 - **Automated Verification (PASS)**: ROM hash verification, cold boot, Story 1-1 initialization, password recovery to Worlds 2 & 5, Battle mode 4P spawn and elimination lifecycle, savestates, rewind ring buffer, and launcher GUI.
-- **Physical 4-Gamepad Session (PENDING User Acceptance)**: The Multitap architecture and GUI configuration for 4 controllers are verified and active; physical multi-gamepad verification with 4 physical USB/Bluetooth controllers is left for user hands-on testing.
+- **Physical Gamepad Verification**: Multitap input routing and dual-gamepad physical testing have been confirmed; full simultaneous 4 physical gamepad validation is supported by design and open for user testing.
+- **Story Mode Coverage**: Stage 1-1 progression, bomb mechanics, and world password jumps are verified; full campaign playthrough is open for user completion.
+
+---
+
+## Third-Party Licenses
+
+- **SNESRecomp Framework**: [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0/)
+- **recomp-ui & Dear ImGui**: MIT License
+- **Simple DirectMedia Layer (SDL2)**: zlib License
+- **Fonts & Typography**: SIL Open Font License 1.1 / CC BY-SA 4.0
+- See [`THIRD_PARTY_LICENSES.md`](file:///D:/Project/GameRecomp/SuperBomberman2Recomp/THIRD_PARTY_LICENSES.md) for full licensing terms and copyright notices.

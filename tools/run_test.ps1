@@ -1,23 +1,27 @@
 param(
     [Parameter(Mandatory=$true)]
     [string]$ScriptPath,
-    [string]$DumpDir = "D:\Project\GameRecomp\SuperBomberman2Recomp\dumps",
+    [string]$DumpDir = "",
     [hashtable]$EnvVars = @{},
     [int]$TimeoutSec = 45
 )
 
 $ErrorActionPreference = "Stop"
 
-$projectRoot = "D:\Project\GameRecomp\SuperBomberman2Recomp"
-$buildExe = "$projectRoot\build\SuperBomberman2SNESRecomp.exe"
-$buildDll = "$projectRoot\build\SDL2.dll"
-$romPath = "$projectRoot\Super Bomberman 2 (USA).sfc"
+$projectRoot = (Resolve-Path "$PSScriptRoot\..").Path
+$buildExe = Join-Path $projectRoot "build\SuperBomberman2SNESRecomp.exe"
+$buildDll = Join-Path $projectRoot "build\SDL2.dll"
+$romPath = Join-Path $projectRoot "Super Bomberman 2 (USA).sfc"
+
+if (-not $DumpDir) {
+    $DumpDir = Join-Path $projectRoot "dumps"
+}
 
 if (!(Test-Path $buildExe)) {
     throw "Executable not found at $buildExe"
 }
 
-$stage = "C:\MYAPPLY\_sb2_run"
+$stage = Join-Path $env:TEMP "_sb2_run"
 New-Item -ItemType Directory -Path $stage -Force | Out-Null
 Copy-Item $buildExe "$stage\SuperBomberman2SNESRecomp.exe" -Force
 Copy-Item $buildDll "$stage\SDL2.dll" -Force
