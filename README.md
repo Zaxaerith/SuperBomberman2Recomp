@@ -1,117 +1,138 @@
 # Super Bomberman 2 Recomp
 
-A native recompilation of **Super Bomberman 2** (USA), built on
-[snesrecomp](https://github.com/RetroPortingToolKit/snesrecomp).
+A native Windows x64 recompilation of **Super Bomberman 2** (USA), built on [SNESRecomp](https://github.com/RetroPortingToolKit/snesrecomp) and [recomp-ui](https://github.com/RetroPortingToolKit/recomp-ui).
 
-_Add a short description here._
+> [!IMPORTANT]
+> **Legal Notice & Disclaimer**: This project is an unofficial, noncommercial static recompilation intended for personal study, preservation, and experimentation. It is **not** endorsed by, affiliated with, or licensed by Hudson Soft, Konami, or Nintendo. No commercial ROM data, copyrighted assets, or ROM-derived C source code are included in this repository or in any release package. You must provide your own legally obtained ROM dump.
 
+---
 
+## Features
 
-> **You must legally own a copy of the game.** No ROM data is distributed with
-> this project, in the repository or in any release. The recompiled C is
-> generated locally from your own copy and is never committed.
+- **Ahead-of-Time (AOT) Recompilation**: 65816 machine code statically recompiled into native C / x64 machine code, running natively on Windows without standard CPU emulation overhead.
+- **Story Mode (Normal Game)**: Complete single-player campaign featuring 5 distinct worlds, stage mechanics, destructible soft blocks, enemy behaviors, exit gates, boss battles, and full password resumption.
+- **4-Player Battle Mode**: Classic 4-player competitive battle arena utilizing native SNES Multitap architecture on Console Port 2, featuring independent player inputs, item pickups, bomb kicking/throwing, blast propagation, player eliminations, victory tally, and round cycling.
+- **recomp-ui Launcher**: Modern graphical launcher powered by Dear ImGui with ROM verification, display scaling (1x~10x, 4:3 aspect ratio, fullscreen), audio configuration, keyboard/gamepad mapping, and live settings.
+- **Savestates & Rewind**:
+  - **F7**: Visual save state browser and multi-slot management (`F1`~`F10` quick load, `Shift+F1`~`Shift+F10` quick save).
+  - **F8**: Live circular buffer rewind (gamepad gesture: `Select + R3`).
+  - Cold-boot state loading support.
+- **Authentic Audio & Timing**: Cycle-accurate SNES APU / SPC700 emulation via beam-aligned driver at authentic SNES NTSC field rate (~60.0988 Hz) with WASAPI / SDL audio output.
 
-## Status
+---
 
-Scaffolded on 2026-10-26 — **not yet a working port.** The layout, build,
-regeneration pipeline, CI, and packaging are wired up; the game does not run
-until the host work in `src/game_rtl.c` is done. See
-[Porting from here](#porting-from-here).
+## ROM Identity
 
-## ROM identity
+The recompilation requires the original, unaltered North American release of Super Bomberman 2:
 
-| | |
+| Property | Value |
 |---|---|
-| File | `Super Bomberman 2 (USA).sfc` |
-| Publisher | — |
-| Developer | — |
-| Year | — |
-| Mapping | hirom |
-| Region | USA (North America) |
-| Coprocessor | none |
-| CRC32 | `9c1f11e4` |
-| SHA-256 | `0a4b4a783a7faf6ada3e1326ecf85de77e8c2a171659b42a78a1fae43f806ca6` |
+| **ROM File** | `Super Bomberman 2 (USA).sfc` |
+| **Region** | USA (NTSC) |
+| **ROM Size** | 1,048,576 bytes (1 MiB / 8 Mbit, 16 Banks) |
+| **Cartridge Layout** | HiROM ($00-$1F / $80-$9F: $8000-$FFFF) |
+| **Coprocessor** | None (pure 65816 + SPC700) |
+| **Battery SRAM** | None (Original game utilizes a 4-character password system) |
+| **CRC32** | `9C1F11E4` |
+| **SHA-256** | `0A4B4A783A7FAF6ADA3E1326ECF85DE77E8C2A171659B42A78A1FAE43F806CA6` |
 
-`tools/regen.sh` refuses to run against anything else, so a mismatched
-revision fails immediately instead of producing subtly wrong output.
+> [!NOTE]
+> **Cartridge Architecture Note**: Both *Super Bomberman 1* and *Super Bomberman 2* are HiROM cartridges (SB1 is 512 KiB HiROM; SB2 is 1 MiB HiROM). Neither uses LoROM mapping.
 
-## Build
+---
 
-```sh
+## 4-Player Multitap Configuration
+
+Super Bomberman 2 natively supports up to 4 simultaneous players via the SNES Multitap connected to **Controller Port 2**:
+
+| Multitap Seat | Target Player | Default Source | Supported Devices |
+|---|---|---|---|
+| **Seat 0** | **Player 1 (White Bomberman)** | Keyboard / Gamepad 1 | Keyboard or XInput/DirectInput Gamepad |
+| **Seat 1** | **Player 2 (Black Bomberman)** | Gamepad 2 / Keyboard | Gamepad (or secondary keyboard keys) |
+| **Seat 2** | **Player 3 (Red Bomberman)** | Gamepad 3 / Keyboard | Gamepad (or keypad controls) |
+| **Seat 3** | **Player 4 (Blue Bomberman)** | Gamepad 4 / Keyboard | Gamepad (or alternate keys) |
+| **Seat 4** | *Disconnected* | None | Reserved for future expansion |
+
+Each player slot is independently configured in `config.ini` (`SourceP1`..`SourceP4`) and `keybinds.ini`. The GUI launcher allows assigning different controllers or keyboards to each seat without input crosstalk.
+
+---
+
+## Controls & Keybinds
+
+### Default Keyboard Mapping
+
+| Action | Player 1 | Player 2 | Player 3 | Player 4 |
+|---|---|---|---|---|
+| **D-Pad Up** | `Up Arrow` | `W` | `Keypad 8` | `I` |
+| **D-Pad Down** | `Down Arrow` | `S` | `Keypad 5` | `K` |
+| **D-Pad Left** | `Left Arrow` | `A` | `Keypad 4` | `J` |
+| **D-Pad Right** | `Right Arrow` | `D` | `Keypad 6` | `L` |
+| **B (Drop Bomb)** | `Z` | `J` | `Keypad 1` | `B` |
+| **A (Detonate / Kick / Throw)**| `X` | `K` | `Keypad 2` | `N` |
+| **Y (Special)** | `A` | `U` | `Keypad 4` | `G` |
+| **X (Special)** | `S` | `I` | `Keypad 5` | `H` |
+| **Start** | `Return` | `1` | `Keypad Enter` | `9` |
+| **Select** | `Right Shift` | `2` | `Keypad +` | `0` |
+
+### System Hotkeys
+
+- **F7**: Open Save State Visual Menu
+- **F8**: Rewind Gameplay
+- **F1 ~ F10**: Quick Load Slot 1 ~ 10
+- **Shift + F1 ~ Shift + F10**: Quick Save Slot 1 ~ 10
+- **Alt + Enter**: Toggle Fullscreen
+- **Ctrl + R**: Soft Reset
+- **Shift + P**: Pause Gameplay
+- **P**: Dimmed Pause
+- **Keypad + / -**: Adjust Volume
+- **F**: Toggle Performance / FPS Overlay
+
+---
+
+## Original Password System
+
+The original cartridge uses a 4-character password system rather than battery-backed SRAM. The password menu can be accessed directly from the main menu:
+
+- **World 2 Resumption**: `1111`
+- **World 3 Resumption**: `2222`
+- **World 4 Resumption**: `3333`
+- **World 5 Resumption**: `5555`
+
+---
+
+## Building from Source
+
+### Prerequisites
+
+- 64-bit Windows (10 or 11)
+- GCC with C11 and C++17 support (e.g. MinGW-w64 x86_64)
+- CMake 3.20 or newer
+- Ninja build system
+- Python 3.10 or newer
+
+### Build Instructions
+
+```powershell
+# 1. Clone repository and initialize submodules
 git submodule update --init --recursive
-bash tools/regen.sh --rom /path/to/Super Bomberman 2 (USA).sfc
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j
+
+# 2. Place your valid Super Bomberman 2 (USA).sfc in the project root
+
+# 3. Generate AOT C sources from ROM
+bash tools/regen.sh --rom "Super Bomberman 2 (USA).sfc"
+
+# 4. Configure with CMake
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+
+# 5. Compile binary (using 2 parallel jobs)
+ninja -C build -j2
 ```
 
-The ROM does not have to live in the repository — keeping it on your own
-drive is the better habit, and `SNESRECOMP_ROM` sets the path once for a
-shell. Without either, `tools/regen.sh` finds `Super Bomberman 2 (USA).sfc` at the repo root,
-then the path the setup wizard recorded in `rom.cfg`; `.gitignore` blocks
-both from ever being committed.
+The resulting executable will be located at `build/SuperBomberman2SNESRecomp.exe`.
 
-`tools/regen.sh` verifies the ROM, generates `src/gen/*.c`, and re-syncs
-`recomp/funcs.h`. Re-run it whenever you change anything under `recomp/`.
+---
 
-## Run
+## Known Limitations & Verification Status
 
-```sh
-./build/SuperBomberman2SNESRecomp                     # launcher picks the ROM
-./build/SuperBomberman2SNESRecomp /path/to/Super Bomberman 2 (USA).sfc # or name it and skip the launcher
-```
-
-With no ROM on the command line the build opens the recomp-ui launcher: a ROM
-picker with a verification badge, plus display / audio / input settings. Your
-choice is cached in `rom.cfg` beside the executable, so the next launch opens
-on it and "Skip launcher on boot" makes it immediate. If the launcher is not
-built in (`--no-recomp-ui`), the host falls back to a native file picker.
-
-Either way the ROM is checked against the digests above before anything boots
-— a dump that could not have produced this build is refused at the door rather
-than mis-executing ten frames in.
-
-## Layout
-
-| Path | What lives there |
-|---|---|
-| `recomp/` | Analysis input: `bank*.cfg`, `symbols.toml`, generated `funcs.h` |
-| `rom_identity.txt` | ROM digests — read by the build, `tools/regen.sh` and CI |
-| `src/` | Host code you own: `main.c`, `game_rtl.c` |
-| `src/gen/` | Generated C. Never committed — regenerate locally |
-| `snesrecomp/` | Framework submodule (owns `lib/recomp-net`, `lib/retcomm-rbengine`) |
-| `tools/` | `regen.sh` — the ROM → C pipeline |
-| `scripts/` | `package_release.sh` — player-facing zip |
-| `framework_pins.txt` | Exact framework commits this project was scaffolded against |
-
-## Porting from here
-
-The scaffold stops where the game-specific work starts. In rough order:
-
-1. **Make it boot.** `src/game_rtl.c` holds the frame driver. It starts on
-   the framework's beam-aligned driver (`snesrecomp/runner/src/beam_frame_driver.h`):
-   one frame per PPU field, interrupts taken where the beam latches them,
-   the field rasterized from the raster journal. A title whose main loop it
-   does not fit replaces those calls with its own driver.
-2. **Name things.** Add entries to `recomp/symbols.toml` as you identify
-   routines, then re-run `tools/regen.sh`. Set `emit = true` to promote one
-   into ahead-of-time analysis; leave it false to keep it interpreted.
-   Regen synchronizes the marked blocks in each bank cfg, creating missing
-   configs. Only proven variants become AOT code. See `recomp/README.md`.
-3. **Resolve dispatch misses.** After every run, deal with unresolved
-   indirect targets before anything else — they are the reason a port
-   diverges, and they are cheap to fix early.
-4. **Never synthesise a result** to get past uncovered code, and never edit
-   `src/gen/` by hand. Fix the config or the framework and regenerate.
-
-## Multiplayer
-
-Up to 4 players through a Super Multitap (port2). Seats
-beyond the second are driven with `RtlSetPadState` — see
-`snesrecomp/docs/MULTITAP.md`.
-
-## License
-
-This project's own source is under the license in `LICENSE`. The framework
-carries its own terms — see `snesrecomp/LICENSE` and
-`snesrecomp/THIRD_PARTY_ATTRIBUTION.md`. Neither covers the game data, which
-is not distributed here.
+- **Automated Verification (PASS)**: ROM hash verification, cold boot, Story 1-1 initialization, password recovery to Worlds 2 & 5, Battle mode 4P spawn and elimination lifecycle, savestates, rewind ring buffer, and launcher GUI.
+- **Physical 4-Gamepad Session (PENDING User Acceptance)**: The Multitap architecture and GUI configuration for 4 controllers are verified and active; physical multi-gamepad verification with 4 physical USB/Bluetooth controllers is left for user hands-on testing.

@@ -5,6 +5,12 @@ set(CMAKE_C_STANDARD 11)
 
 # Force SDL2 backend
 set(SNESRECOMP_SDL_BACKEND "SDL2" CACHE STRING "Desktop SDL backend (SDL3 or SDL2)" FORCE)
+set(RECOMP_UI_SDL3 OFF CACHE BOOL "Build recomp-ui against SDL3 instead of SDL2" FORCE)
+
+option(SB2_ENABLE_TEST_HOOKS "Enable test harness input injection hooks (default OFF)" OFF)
+if(SB2_ENABLE_TEST_HOOKS)
+    add_compile_definitions(SB2_ENABLE_TEST_HOOKS=1)
+endif()
 
 # Release pin for lobby matching. Release builds stamp the VERSION file so two
 # peers can prove they are the same build; everything else stamps "dev".
@@ -107,12 +113,16 @@ snesrecomp_target_desktop_host(SuperBomberman2SNESRecomp)
 # opens on that dump rather than asking for one.
 snesrecomp_target_rom_cache(SuperBomberman2SNESRecomp)
 
-# No GUI launcher: this project was scaffolded with --no-recomp-ui.
-# Add the submodule and re-run this block to get one:
-#   git submodule add https://github.com/mstan/recomp-ui.git recomp-ui
-#   set(RECOMP_UI_ROOT "${CMAKE_SOURCE_DIR}/recomp-ui" CACHE PATH "" FORCE)
-#   include(${RECOMP_UI_ROOT}/recomp_ui.cmake)
-#   recomp_target_launcher_ui(SuperBomberman2SNESRecomp CONSOLE snes)
+# recomp-ui native GUI launcher integration
+set(RECOMP_UI_ROOT "${CMAKE_SOURCE_DIR}/recomp-ui" CACHE PATH
+    "Root directory of the recomp-ui launcher repo" FORCE)
+if(NOT EXISTS "${RECOMP_UI_ROOT}/recomp_ui.cmake")
+    message(FATAL_ERROR
+        "recomp-ui missing at ${RECOMP_UI_ROOT}.\n"
+        "Run: git submodule update --init --recursive recomp-ui")
+endif()
+include(${RECOMP_UI_ROOT}/recomp_ui.cmake)
+recomp_target_launcher_ui(SuperBomberman2SNESRecomp CONSOLE snes)
 
 # Netplay is not built into this target.
 # Seats: 4. Call RtlSetMultitap() at startup, or launch with

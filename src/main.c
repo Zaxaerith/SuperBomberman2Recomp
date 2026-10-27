@@ -43,6 +43,7 @@
 #define SNES_GAME_VERSION "dev"
 #endif
 
+#if defined(SB2_ENABLE_TEST_HOOKS) && SB2_ENABLE_TEST_HOOKS
 static void SuperBomberman2_BeforeRunFrame(void)
 {
     static int s_frame = 0;
@@ -75,22 +76,28 @@ static void SuperBomberman2_BeforeRunFrame(void)
         }
     }
 }
+#endif
 
 static const SnesDesktopHostGame kGameHost = {
-    .display_name        = "Super Bomberman 2",
-    .window_title        = "Super Bomberman 2",
-    .region              = SNESRECOMP_ROM_REGION,
-    .rom_file            = SNESRECOMP_ROM_FILE,
-    .expected_sha256_hex = SNESRECOMP_ROM_EXPECTED_SHA256,
-    .expected_crc32_hex  = SNESRECOMP_ROM_EXPECTED_CRC32,
-    .game_id             = SNESRECOMP_ROM_GAME_ID,
-    .build_version       = SNES_GAME_VERSION,
-    .game_info           = &kGameInfo,
-    .num_players         = 4,
-    .before_run_frame    = &SuperBomberman2_BeforeRunFrame,
+    .display_name             = "Super Bomberman 2",
+    .window_title             = "Super Bomberman 2",
+    .launcher_title           = "Super Bomberman 2 — Launcher",
+    .region                   = SNESRECOMP_ROM_REGION,
+    .rom_file                 = SNESRECOMP_ROM_FILE,
+    .expected_sha256_hex      = SNESRECOMP_ROM_EXPECTED_SHA256,
+    .expected_crc32_hex       = SNESRECOMP_ROM_EXPECTED_CRC32,
+    .game_id                  = SNESRECOMP_ROM_GAME_ID,
+    .build_version            = SNES_GAME_VERSION,
+    .game_info                = &kGameInfo,
+    .num_players              = 4,
+#if defined(SB2_ENABLE_TEST_HOOKS) && SB2_ENABLE_TEST_HOOKS
+    .before_run_frame         = &SuperBomberman2_BeforeRunFrame,
+#else
+    .before_run_frame         = NULL,
+#endif
     /* Battery-backed SRAM shows the launcher's SAVES panel. Leave NULL for a
      * title without one. The path is exe-relative. */
-    .sram_path           = NULL,
+    .sram_path                = NULL,
     .display_aspect_supported = 1,
     .shader_supported         = 1,
     .rewind_settings          = 1,
